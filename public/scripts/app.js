@@ -10,9 +10,8 @@
             'ngSanitize',
             'ngAnimate',
             'ngRoute',
-            //'escomm.WebService',
             'gettext',
-            //'angularSmoothscroll'
+            'angularSmoothscroll',
             'ui.bootstrap'
         ]);
 

@@ -6,7 +6,9 @@
         .module("escomm")
         .controller("MainController", MainController);
 
-    function MainController() {
-
+    function MainController(Auth) {
+        var vm = this;
+        vm.uid = Auth.getUserId();
+        console.log(vm.uid);
     }
 })();

@@ -36,7 +36,8 @@ angular.module('escomm')
 
             console.log(angular.toJson($scope.FormData));
 
-            $http.post("https://crucore.com/api.php?a=invite", angular.toJson($scope.FormData)).success(function(data, status) {
+            $http.post("https://crucore.com/api.php?a=invite", angular.toJson($scope.FormData))
+                .success(function(data, status) {
                     console.log("Success")
 
                     first.inviteSuccess.message = true;

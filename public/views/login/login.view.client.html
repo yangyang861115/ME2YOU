@@ -1,0 +1,284 @@
+<div id="content" class="container">
+    <div class="lesson-main-point">
+        <h2>Login</h2>
+        <div class="text-center">
+
+            <h3>Choose one of these login methods</h3>
+            <h4><a href="https://crucore.com/api.php?a=social_fb">FB</a> &bull; <a href="https://crucore.com/api.php?a=social_gm">GM</a> &bull; <a href="https://crucore.com/api.php?a=social_tk">Key</a></h4>
+        </div>
+    </div>
+
+    <div class="row question-answer lesson-qa">
+        <div class="answers col-md-6 col-md-offset-3" id="accordion">
+            <uib-accordion close-others="model.oneAtATime">
+                <!--1 Social Media Login-->
+                <uib-accordion-group is-open="model.status.isFirstOpen">
+                    <uib-accordion-heading>
+                        <div class="line">
+                            Social Media Login <i class="pull-right fa"
+                                                  ng-class="{'fa-minus': model.status.isFirstOpen, 'fa-plus': !model.status.isFirstOpen}"></i>
+                        </div>
+                    </uib-accordion-heading>
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="text-center">
+                            <a href="https://crucore.com/api.php?a=social_fb"><button class="btn btn-default btn-social w300 center-block"><i
+                                    class="fa fa-facebook"></i> | Connect with Facebook
+                            </button></a>
+                            <a href="https://crucore.com/api.php?a=social_gm"><button class="btn btn-default btn-social w300 center-block"><i
+                                    class="fa fa-google-plus"></i> | Connect with Google Plus
+                            </button></a>
+                            <a href="https://crucore.com/api.php?a=social_tk"><button class="btn btn-default btn-social w300 center-block"><i
+                                    class="fa fa-key"></i> | Connect with The Key
+                            </button></a>
+                        </div>
+                    </div>
+                </uib-accordion-group>
+                <!--1 End of Social Media Login-->
+
+                <!--2 Username&Password Login-->
+                <uib-accordion-group is-open="model.status.isSecondOpen" ng-hide="model.createUser">
+                    <uib-accordion-heading>
+                        <div class="line">
+                            Username&Password <i class="pull-right fa"
+                                                 ng-class="{' fa-minus': model.status.isSecondOpen, 'fa-plus': !model.status.isSecondOpen}"></i>
+                        </div>
+                    </uib-accordion-heading>
+                    <div class="col-md-6 col-md-offset-3">
+                        <form name="pdForm" class="form" id="ue_pd_fm" novalidate>
+                            <div class="form-group has-feedback">
+                                <div class="input-group">
+                                    <label class="sr-only" for="username">Username</label>
+                                    <input ng-model="model.pdForm.username" type="text" name="username" id="username"
+                                           placeholder="Username"
+                                           class="form-control" required>
+                                    <span class="input-group-addon">required</span>
+                                </div>
+                                <small class="help-block"
+                                       ng-show="pdForm.username.$dirty && pdForm.username.$error.required">
+                                    username is required for login
+                                </small>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <div class="input-group">
+                                    <label class="sr-only" for="password">Password</label>
+                                    <input ng-model="model.pdForm.password" type="password"
+                                           name="password" id="password" placeholder="Password"
+                                           class="form-control"
+                                           ng-pattern="model.PASSWORD_PATTERN" required>
+                                    <span class="input-group-addon">required</span>
+                                </div>
+                                <small class="help-block"
+                                       ng-show="pdForm.password.$dirty && pdForm.password.$error.required">
+                                    password is required for login
+                                </small>
+                                <small class="help-block"
+                                       ng-show="pdForm.password.$dirty && pdForm.password.$error.pattern">
+                                    At least 7 character with at least one upper case, one lower case and one number
+                                </small>
+                            </div>
+                            <div class="text-left">
+                                <input type="checkbox" ng-model="model.remember" name="remember"> Remember Me
+                            </div>
+                            <div class="form-group text-center">
+                                <input ng-disabled="pdForm.$invalid" ng-click="main.signin(model.pdForm)"
+                                       type="button" id="ue_pd_st" value="Login" class="btn btn-default w300">
+                            </div>
+                            <div class="help-block" ng-show="pdErrorMsg">{{pdErrorMsg}}</div>
+                        </form>
+                        <hr>
+                        <p>For password or username recovery, use the "Send Code to Email" button below.<br>
+                            <a ng-click="model.showCreateLogin()">Create a New User</a>
+                        </p>
+                    </div>
+                </uib-accordion-group>
+                <!--2 End of Username&Password Login-->
+
+                <!--3 Email code Login-->
+                <uib-accordion-group is-open="model.status.isThirdOpen" ng-hide="model.createUser">
+                    <uib-accordion-heading>
+                        <div class="line">
+                            Send Code to Email <i class="pull-right fa"
+                                                  ng-class="{'fa-minus': model.status.isThirdOpen, 'fa-plus': !model.status.isThirdOpen}"></i>
+                        </div>
+                    </uib-accordion-heading>
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="panel-body" id="send_email">
+                            <p>This option sends a code to your email which is used to verify your identity and grant
+                                access.</p>
+                            <form name="emlForm" id="send_email_form" novalidate>
+                                <div class="form-group has-feedback">
+                                    <div class="input-group">
+                                        <label class="sr-only" for="email">Email</label>
+                                        <input ng-model="model.emlForm.email" type="email" name="email" id="email"
+                                               placeholder="Enter Email Address" ng-pattern="model.EMAIL_PATTERN"
+                                               class="form-control" required>
+                                        <span class="input-group-addon">required</span>
+                                    </div>
+                                    <small class="help-block"
+                                           ng-show="emlForm.email.$dirty && emlForm.email.$error.required">The Email is
+                                        required and cannot be
+                                        empty
+                                    </small>
+                                    <small class="help-block"
+                                           ng-show="emlForm.email.$dirty && emlForm.email.$error.pattern">The input is
+                                        not a valid email
+                                        address
+                                    </small>
+                                </div>
+                                <div class="form-group text-center">
+                                    <input ng-click="main.getCodeByEmail(model.emlForm.email)" type="button"
+                                           ng-disabled="emlForm.$invalid"
+                                           id="sgend_email_btn"
+                                           value="Send Code"
+                                           class="btn center-block btn-default">
+                                </div>
+                                <div class="help-block" ng-show="emlErrorMsg"
+                                     ng-bind-html="main.renderHtml(emlErrorMsg)"></div>
+                            </form>
+                        </div>
+                    </div>
+                </uib-accordion-group>
+                <!--3 End of Email code Login-->
+
+                <!--4 Create a Username/Password-->
+                <uib-accordion-group is-open="model.status.isFourthOpen" ng-show="model.createUser">
+                    <uib-accordion-heading>
+                        <div class="line">
+                            Create a Username/Password <i class="pull-right fa"
+                                                          ng-class="{'fa-minus': model.status.isFourthOpen, 'fa-plus': !model.status.isFourthOpen}"></i>
+                        </div>
+                    </uib-accordion-heading>
+                    <div class="col-md-6 col-md-offset-3">
+                        <form name="usrForm" class="form" id="profile" novalidate>
+                            <div class="form-group has-feedback">
+                                <div class="input-group">
+                                    <label class="sr-only" for="ue_email">Email</label>
+                                    <input type="email" name="email" placeholder="Email"
+                                           ng-model="model.usrForm.email"
+                                           ng-pattern="model.EMAIL_PATTERN"
+                                           id="ue_email" class="form-control" required>
+                                    <span class="input-group-addon">required</span>
+                                </div>
+                                <small class="help-block"
+                                       ng-show="usrForm.email.$dirty && usrForm.email.$error.required">
+                                    The Email is required and cannot be empty
+                                </small>
+                                <small class="help-block"
+                                       ng-show="usrForm.email.$dirty && usrForm.email.$error.pattern">
+                                    The value is not a valid email address
+                                </small>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <div class="input-group">
+                                    <label class="sr-only" for="firstname">First Name</label>
+                                    <input ng-model="model.usrForm.firstname" type="text" name="firstname"
+                                           id="firstname" placeholder="First (given) Name" required
+                                           class="form-control">
+                                    <span class="input-group-addon">required</span>
+                                </div>
+                                <small class="help-block"
+                                       ng-show="usrForm.firstname.$dirty && usrForm.firstname.$error.required">
+                                    The Name is required and cannot be left blank
+                                </small>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <div class="input-group">
+                                    <label class="sr-only" for="lastname">First Name</label>
+                                    <input ng-model="model.usrForm.lastname" type="text" name="lastname"
+                                           id="lastname" placeholder="Last (family) Name" required
+                                           class="form-control">
+                                    <span class="input-group-addon">required</span>
+                                </div>
+                                <small class="help-block"
+                                       ng-show="usrForm.lastname.$dirty && usrForm.lastname.$error.required">
+                                    The Name is required and cannot be left blank
+                                </small>
+                            </div>
+                            <div class="text-center">
+                                <a id="filluser" ng-click="model.usrForm.username = model.usrForm.email">Copy email to
+                                    username</a>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <div class="input-group">
+                                    <label class="sr-only" for="nusername">Username</label>
+                                    <input ng-model="model.usrForm.username" type="text" name="username" id="nusername"
+                                           placeholder="Username" ng-minlength="6" ng-maxlength="30"
+                                           ng-pattern="model.USERNAME_PATTERN"
+                                           class="form-control" required>
+                                    <span class="input-group-addon">required</span>
+                                </div>
+                                <small class="help-block"
+                                       ng-show="usrForm.username.$dirty && usrForm.username.$error.required">
+                                    username is required for login
+                                </small>
+                                <small class="help-block"
+                                       ng-show="usrForm.username.$dirty && (usrForm.username.$error.minlength || usrForm.username.$error.maxlength)">
+                                    The username must be more than 6 and less than 30 characters long
+                                </small>
+                                <small class="help-block"
+                                       ng-show="usrForm.username.$dirty && usrForm.username.$error.pattern">
+                                    The username can only consist of alphabetical, number, dot and underscore
+                                </small>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <div class="input-group">
+                                    <label class="sr-only" for="ue_password">Password</label>
+                                    <input ng-model="model.usrForm.password" type="password"
+                                           name="password" id="ue_password" placeholder="Password"
+                                           class="form-control"
+                                           ng-pattern="model.PASSWORD_PATTERN" required>
+                                    <span class="input-group-addon">required</span>
+                                </div>
+                                <small class="help-block"
+                                       ng-show="usrForm.password.$dirty && usrForm.password.$error.required">
+                                    password is required for login
+                                </small>
+                                <small class="help-block"
+                                       ng-show="usrForm.password.$dirty && usrForm.password.$error.pattern">
+                                    At least 7 character with at least one upper case, one lower case and one number
+                                </small>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <div class="input-group">
+                                    <label class="sr-only" for="confirmpassword">Confirm Password</label>
+                                    <input ng-model="model.usrForm.confirmPassword" type="password"
+                                           name="confirmPassword" id="confirmpassword" placeholder="Confirm Password"
+                                           class="form-control" required
+                                           ui-validate=" '$value==model.usrForm.password' "
+                                           ui-validate-watch=" 'model.usrForm.password' ">
+                                    <span class="input-group-addon">required</span>
+                                </div>
+                                <small class="help-block"
+                                       ng-show="usrForxm.confirmPassword.$dirty && usrForm.confirmPassword.$error.required">
+                                    Confirm password is required
+                                </small>
+                                <small class="help-block"
+                                       ng-show="usrForm.confirmPassword.$dirty && usrForm.confirmPassword.$error.validator">
+                                    The password and its confirm are not the same
+                                </small>
+
+                            </div>
+                            <div class="text-left">
+                                <input type="checkbox" ng-model="model.remember2" name="remember2"> Remember Me
+                            </div>
+                            <div class="text-center">
+                                <div class="form-group">
+                                    <input type="submit" ng-disabled="true" class="btn btn-default" value="Start your Personal Study">
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" class="btn btn-default" value="Lead a Group Study">
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <a href="/" class="btn btn-link">Cancel</a>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </uib-accordion-group>
+                <!--4 End of Create a Username/Password-->
+            </uib-accordion>
+        </div>
+    </div>
+</div>
