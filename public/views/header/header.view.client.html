@@ -1,0 +1,45 @@
+<!-- Static navbar -->
+<nav class="navbar navbar-default navbar-static-top navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#/"><span class="orange" translate>Me</span>-
+                <translate>2</translate>
+                -<span class="orange" translate>You</span></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#/user/123/contacts_activity" translate>Contacts' Activity</a></li>
+                <li><a href="#/resources" translate>Resources</a></li>
+                <li><a href="#/user/123/send_invite" class="clear">
+                    <button type="button" class="btn btn-orange" translate> + New Invitation</button>
+                </a></li>
+                <li uib-dropdown on-toggle="open=!open">
+                    <a href id="simple-dropdown" uib-dropdown-toggle>
+                        <img src="../images/sarah.png" alt="sarah" style="margin-right: 10px;">
+                        <translate>Sarah Student</translate>
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                        <li><a href="#/user/123/account_setting" translate>Account Settings</a></li>
+                        <li><a href="#/about" translate>About This App</a></li>
+                        <li><a href="#/contact_us" translate>Contact Us</a></li>
+                        <li><a href="#/" translate>Sign Out</a></li>
+                    </ul>
+                </li>
+                <li><a href="#/about" translate>About</a></li>
+                <li><a href="#/contact_us" translate>Contact</a></li>
+                <li><a href="" smooth-scroll target="signup" offset="0" translate>Sign Up</a></li>
+                <li><a href="#/user/123/" class="clear">
+                    <button type="button" class="btn btn-orange" translate>Sign In</button>
+                </a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
