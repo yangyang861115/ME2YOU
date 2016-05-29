@@ -10,20 +10,23 @@
 
         function init(){
             //vm.token = $routeParams.tokenstring;
+            console.log($routeParams.tokenstring);
+
             Auth.saveToken($routeParams.tokenstring, function(){
                 User.validateToken()
                     .then(function(response) {
-
-                        if (response.data.success) {
+                        console.log(response.data);
+                        //if (response.data.success) {
+                            var id = Auth.getUserId();
                             console.log("login successfully!");
-                            window.location = "#/user/123/";
+                            window.location = "#/user/" + id;
                             //need to change to actual userID
-                        }
-                        else {
-                            $window.localStorage.removeItem('jwtToken');
-                            window.location = "#/login";
-                            alert("invalid token");
-                        }
+                       // }
+                        //else {
+                        //    $window.sessionStorage.removeItem('jwtToken');
+                        //    window.location = "#/login";
+                        //    alert("invalid token");
+                        //}
 
                     });
             });
