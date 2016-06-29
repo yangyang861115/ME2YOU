@@ -5,7 +5,7 @@
     'use strict';
 
     angular
-        .module('escomm', [
+        .module('myApp', [
             'ngResource',
             'ngSanitize',
             'ngAnimate',

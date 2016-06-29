@@ -5,14 +5,14 @@
     'use strict';
 
     angular
-        .module('escomm')
+        .module('myApp')
         .config(configuration)
         .run(languageConfig)
         .run(restrict);
 
     function configuration($routeProvider, $httpProvider) {
         $routeProvider
-            //public pages
+        //public pages
             .when('/', {
                 templateUrl: 'views/home/home.view.client.html',
             })
@@ -37,17 +37,29 @@
                 controllerAs: "model"
             })
             //user actions after login
-            .when('/user/:uid/', {
+            .when('/user', {
                 templateUrl: 'views/user/dashboard.view.client.html',
+                resolve : {
+                    loggedIn: checkLoggedIn
+                }
             })
-            .when('/user/:uid/account_setting', {
+            .when('/user/account_setting', {
                 templateUrl: 'views/user/account_setting.view.client.html',
+                resolve : {
+                    loggedIn: checkLoggedIn
+                }
             })
-            .when('/user/:uid/contacts_activity', {
+            .when('/user/contacts_activity', {
                 templateUrl: 'views/user/contacts_activity.view.client.html',
+                resolve : {
+                    loggedIn: checkLoggedIn
+                }
             })
-            .when('/user/:uid/send_invite', {
+            .when('/user/send_invite', {
                 templateUrl: 'views/user/send_invite.view.client.html',
+                resolve : {
+                    loggedIn: checkLoggedIn
+                }
             })
             //error
             .when('/404', {
@@ -57,37 +69,153 @@
                 redirectTo: '/404'
             });
 
+
+        function checkLoggedIn(Auth, User, $location, $q) {
+            var deferred = $q.defer();
+            var token = Auth.getToken();
+            if (token) {
+                User.validateToken()
+                    .then(
+                        function (response) {
+                            if (response && response.data.success) {
+                                deferred.resolve();
+                            } else {
+                                deferred.reject();
+                                $location.url('/login');
+                            }
+                        },
+                        function (err) {
+                            deferred.reject();
+                            $location.url('/login');
+                        }
+                    );
+            } else {
+                var cookieToken = Auth.getTokenFromCookie();
+                if (cookieToken) {
+                    Auth.saveToken(cookieToken, function () {
+                        User.validateToken(cookieToken)
+                            .then(function (response) {
+                                if (response && response.data.success) {
+                                    deferred.resolve();
+                                }
+                                else {
+                                    $window.localStorage.removeItem('jwtToken');
+                                    Auth.deleteRememberMeCookie();
+                                    deferred.reject();
+                                    $location.url('/login');
+                                }
+                            });
+                    });
+                } else {
+                    deferred.reject();
+                    $location.url('/login');
+                }
+            }
+            return deferred.promise;
+        }
+
+        function checkAdmin(Auth, $location, $q) {
+            var deferred = $q.defer();
+            var admin = Auth.checkAdmin();
+            if (admin) {
+                deferred.resolve();
+            } else {
+                deferred.reject();
+                $location.url('/user');
+            }
+            return deferred.promise;
+        }
+
         $httpProvider.interceptors.push(authInterceptor);
 
-        function authInterceptor( Auth, $window) {
+        function authInterceptor(Auth, $window) {
             return {
                 // automatically attach Authorization header
-                request: function(config) {
-                    var token = Auth.getToken();
-                    if(token) {
-                        config.headers.Authorization =  token;
+                request: function (config) {
+                    var token = $window.sessionStorage['jwtToken'];
+                    //console.log("the token in the header is ");
+                    //console.log(token);
+                    if (token) {
+                        config.headers.Authorization = token;
                     }
                     return config;
                 },
 
                 // If a token was sent back, save it
-                response: function(res) {
-                    if(res.data.token) {
+                response: function (res) {
+                    if (res.data.token) {
                         Auth.saveToken(res.data.token);
                     }
 
                     return res;
                 },
 
-                responseError: function(res){
-                    if(res.status === 401) {
+                responseError: function (res) {
+                    if (res.status === 401) {
                         $window.location = "#/login";
                     }
                 }
             }
+
+
         }
+
+
     }
 
+    function restrict($rootScope, $location, $window, Auth, User) {
+        $rootScope.$on("$routeChangeStart", function (event, next) {
+            if (!Auth.isAuthed()) {
+                console.log("You don't have a token in session storage");
+                if (next.templateUrl && next.templateUrl.indexOf("views/user/") > -1) {
+                    $location.path("/login");
+                } else if (next.templateUrl === "views/login/login.view.client.html") {
+                    console.log("checking cookie..........");
+                    checkLoginAgain();
+                }
+            } else {
+                console.log("You  have a token in session storage");
+                if (next.templateUrl === "views/login/login.view.client.html") {
+                    $location.path("/user");
+                }
+            }
+
+        });
+
+        function checkLoginAgain() {
+            var cookieState = Auth.validateRememberMeCookie();
+            if (cookieState) {
+                var token;
+                console.log("this is a valid cookie");
+                var cookielist = document.cookie.split(';');
+                for (var i in cookielist) {
+                    if (cookielist[i].indexOf('remember-me') != -1) {
+                        //get the token from the cookie list
+                        token = cookielist[i].split('=')[1];
+                    }
+                }
+
+                Auth.saveToken(token, function () {
+                    User.validateToken()
+                        .then(function (response) {
+                            if (response && response.data.success) {
+                                console.log("login successfully by token in the cookie!");
+                                window.location = "#/user";
+                            }
+                            else {
+                                $window.localStorage.removeItem('jwtToken');
+                                Auth.deleteRememberMeCookie();
+                                window.location = "#/login";
+                                console.log("The token in the cookie is invalid");
+                            }
+                        });
+                });
+
+            } else {
+                console.log("no cookie found or the cookie has expired");
+            }
+        }
+    }
 
 
     function languageConfig(gettextCatalog, $window) {
@@ -99,19 +227,5 @@
         gettextCatalog.setCurrentLanguage(res[0]);
     }
 
-    function restrict ($rootScope, $location, Auth) {
-        $rootScope.$on( "$routeChangeStart", function(event, next) {
-            if (!Auth.isAuthed()) {
-                if ( next.templateUrl && next.templateUrl.indexOf("views/user/") > -1) {
-                    $location.path("/login");
-                }
-            }else {
-                var uid = Auth.getUserId();
-                if ( next.templateUrl === "views/login/login.view.client.html") {
-                    $location.path("/user/" + uid);
-                }
-            }
-        });
-    }
 
 })();

@@ -15,9 +15,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#/user/123/contacts_activity" data-ng-show="main.isAuthed()" translate>Contacts' Activity</a></li>
+                <li><a href="#/user/contacts_activity" data-ng-show="main.isAuthed()" translate>Contacts' Activity</a></li>
                 <li><a href="#/resources" translate>Resources</a></li>
-                <li><a href="#/user/123/send_invite" data-ng-show="main.isAuthed()" class="clear">
+                <li><a href="#/user/send_invite" data-ng-show="main.isAuthed()" class="clear">
                     <button type="button" class="btn btn-orange" translate> + New Invitation</button>
                 </a></li>
                 <li uib-dropdown on-toggle="open=!open" data-ng-show="main.isAuthed()">
@@ -27,7 +27,7 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
-                        <li><a href="#/user/123/account_setting" translate>Account Settings</a></li>
+                        <li><a href="#/user/account_setting" translate>Account Settings</a></li>
                         <li><a href="#/about" translate>About This App</a></li>
                         <li><a href="#/contact_us" translate>Contact Us</a></li>
                         <li><a ng-click="main.logout()" translate>Sign Out</a></li>

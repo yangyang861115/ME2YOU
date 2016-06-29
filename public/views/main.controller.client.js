@@ -3,7 +3,7 @@
  */
 (function(){
     angular
-        .module("escomm")
+        .module("myApp")
         .controller("MainController", MainController);
 
     function MainController($scope, User, Auth, $rootScope,$sce) {
