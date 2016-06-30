@@ -5,7 +5,7 @@
     angular
         .module("myApp")
         .controller("RedirectController", redirectController);
-    function redirectController ($routeParams, $window, User, Auth) {
+    function redirectController ($routeParams, $window, User, Auth,$scope) {
         var vm = this;
 
         function init(){
@@ -16,7 +16,8 @@
 
                         if (response && response.data.success) {
                             console.log("login successfully!");
-                            window.location = "#/user";
+                            $scope.$emit('login', "success");
+                            window.location = "#/user/contacts_activity";
                         }
                         else {
                             $window.sessionStorage.removeItem('jwtToken');

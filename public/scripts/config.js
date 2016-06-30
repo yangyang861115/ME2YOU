@@ -24,9 +24,16 @@
             })
             .when('/contact_us', {
                 templateUrl: 'views/contact/contact.view.client.html',
+                controller: "ContactController",
+                controllerAs: "model"
             })
             //login
             .when('/login', {
+                templateUrl: 'views/login/login.view.client.html',
+                controller: "LoginController",
+                controllerAs: "model"
+            })
+            .when('/signup', {
                 templateUrl: 'views/login/login.view.client.html',
                 controller: "LoginController",
                 controllerAs: "model"
@@ -45,6 +52,8 @@
             })
             .when('/user/account_setting', {
                 templateUrl: 'views/user/account_setting.view.client.html',
+                controller: "AccountController",
+                controllerAs: "model",
                 resolve : {
                     loggedIn: checkLoggedIn
                 }

@@ -5,21 +5,40 @@
                 Contact Us
             </h1>
             <div class="main-content">
-                <form class="form">
+                <form class="form" name="contactFm" novalidate>
                     <div class="form-group col-sm-10 col-sm-offset-1">
-                        <input class="form-control" type="text" placeholder="{{'Username'|translate}}" readonly>
+                        <input class="form-control" type="text"
+                               placeholder="{{'Username'|translate}}"
+                               name="username"
+                               ng-model="model.contact.username" required>
+                        <p class="text-danger"
+                           ng-show="contactFm.username.$touched && contactFm.username.$error.required">
+                            Your name is required
+                        </p>
                     </div>
                     <div class="form-group col-sm-10 col-sm-offset-1">
-                        <input class="form-control" type="email" placeholder="{{'email@example.com'|translate}}"
-                               readonly>
+                        <input class="form-control" type="email" name="email"
+                               placeholder="{{'email@example.com'|translate}}"
+                               ng-model="model.contact.email" required>
+                        <p class="text-danger"
+                           ng-show="contactFm.email.$touched && contactFm.email.$error.required">
+                            Your email is required
+                        </p>
                     </div>
                     <div class="form-group col-sm-10 col-sm-offset-1">
-                            <textarea class="form-control" rows="5"
-                                      placeholder="{{'Your Message'|translate}}"></textarea>
+                            <textarea class="form-control" rows="5" name="message"
+                                      placeholder="{{'Your Message'|translate}}"
+                                      ng-model="model.contact.msg" required></textarea>
+                        <p class="text-danger"
+                           ng-show="contactFm.message.$touched && contactFm.message.$error.required">
+                            Please enter a message.
+                        </p>
                     </div>
                     <div class="form-group col-sm-10 col-sm-offset-1">
-                        <button type="submit" class="btn btn-default send-btn pull-right">
-                            <translate>Send Message</translate>
+                        <button ng-disabled="contactFm.$invalid"
+                                ng-click="model.contactUs(model.contact)"
+                                type="submit" class="btn btn-default send-btn pull-right">
+                            <translate><i class="fa fa-envelope-o fa-3x" aria-hidden="true"></i> Send Message</translate>
                         </button>
                     </div>
                 </form>

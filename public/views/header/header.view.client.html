@@ -23,7 +23,7 @@
                 <li uib-dropdown on-toggle="open=!open" data-ng-show="main.isAuthed()">
                     <a href id="simple-dropdown" uib-dropdown-toggle>
                         <img src="../images/sarah.png" alt="sarah" style="margin-right: 10px;">
-                        <translate>Sarah Student</translate>
+                        <translate>{{main.user.fullname}}</translate>
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
@@ -35,7 +35,7 @@
                 </li>
                 <li><a href="#/about" data-ng-show="!main.isAuthed()" translate>About</a></li>
                 <li><a href="#/contact_us" data-ng-show="!main.isAuthed()" translate>Contact</a></li>
-                <li><a href="" data-ng-show="!main.isAuthed()" smooth-scroll target="signup" offset="0" translate>Sign Up</a></li>
+                <li><a href="#/signup" data-ng-show="!main.isAuthed()" translate>Sign Up</a></li>
                 <li><a href="#/login" data-ng-show="!main.isAuthed()" class="clear">
                     <button type="button" class="btn btn-orange" translate>Sign In</button>
                 </a></li>

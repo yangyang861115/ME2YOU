@@ -11,3 +11,31 @@ footer {
     clear: left;
 }
 
+a{
+    cursor: pointer;
+}
+
+.help-block{
+    color : red;
+}
+
+#userProfile input.ng-touched.ng-invalid {
+    border: 2px solid red;
+}
+#userProfile input.ng-touched.ng-valid {
+    border: 2px solid green;
+}
+
+#userProfile textarea.ng-touched.ng-invalid {
+    border: 2px solid red;
+}
+#userProfile textarea.ng-touched.ng-valid {
+    border: 2px solid green;
+}
+
+#userProfile input.ng-pristine.ng-invalid-required {
+    border: 2px solid blue;
+}
+span.error {
+    color: red;
+}
