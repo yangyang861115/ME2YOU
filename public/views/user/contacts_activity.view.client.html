@@ -5,51 +5,30 @@
                 succesfully sent!
             </div>
             <h1 class="page-header" translate>
-                Friends' Activity
+                Contacts' Activity
             </h1>
+
             <div class="main-content">
-                <a href="#/user/123/send_invite" class="clear">
+                <a href="#/user/send_invite" class="clear">
                     <button type="button" class="btn btn-orange">
                         <translate>+ New Invitation</translate>
                     </button>
                 </a>
+
                 <table style="width:100%">
-                    <tr>
+                    <tr ng-repeat="activity in model.activities">
                         <td>
-                            <translate>Chris C.</translate>
-                            <br/><span translate>Last Activity 1 Day Ago</span></td>
+                            <translate>{{activity.nameline}}</translate>
+                            <br/><span translate>{{activity.lastact}}</span></td>
+                        </td>
                         <td>
-                            <translate>Opened</translate>
-                            <br/><span translate>100%</span></td>
+                            <span translate>{{activity.status}}</span>
+                        </td>
                         <td>
-                            <translate>Received</translate>
-                            <br/><span translate>5/8</span></td>
+                            <span  translate bind-html-compile="activity.action"></span>
+                        </td>
                     </tr>
-                    <tr>
-                        <td>
-                            <translate>Paulo P.</translate>
-                            <br/><span translate>Last Activity 9 Days Ago</span></td>
-                        <td>
-                            <translate>Opened</translate>
-                            <br/><span translate>50%</span></td>
-                        <td>
-                            <translate>Received</translate>
-                            <br/><span translate>2/8</span></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <translate>Abigail A.</translate>
-                            <br/><span translate>Invited: 10 Days Ago</span></td>
-                        <td></td>
-                        <td><a href="" translate>Reinvite</a></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <translate>Samantha S.</translate>
-                            <br/><span translate>Last Activity 12 Days Ago</span></td>
-                        <td></td>
-                        <td><a href=""><span translate>Remove</span></a></td>
-                    </tr>
+
                 </table>
             </div>
         </div>

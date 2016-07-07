@@ -60,12 +60,16 @@
             })
             .when('/user/contacts_activity', {
                 templateUrl: 'views/user/contacts_activity.view.client.html',
+                controller: "ActivityController",
+                controllerAs: "model",
                 resolve : {
                     loggedIn: checkLoggedIn
                 }
             })
             .when('/user/send_invite', {
                 templateUrl: 'views/user/send_invite.view.client.html',
+                controller: "ActivityController",
+                controllerAs: "model",
                 resolve : {
                     loggedIn: checkLoggedIn
                 }

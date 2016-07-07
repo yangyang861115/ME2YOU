@@ -6,15 +6,17 @@
     function MainController(User, Auth, $sce, $scope) {
         var vm = this;
         vm.user = {};
+        vm.EMAIL_REGEXP = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
 
         function init(){
             if(Auth.isAuthed()) {
                 User.getProfile()
                     .then(function(response){
-                        console.log(response.data);
+                        //console.log(response.data);
                         vm.userRecord = response.data.data;
                         vm.userInfo = response.data.userninfo;
                         vm.user.fullname = vm.userRecord[1].value + " " + vm.userRecord[2].value;
+                        vm.user.firstname = vm.userRecord[1].value;
                     });
             }
         }

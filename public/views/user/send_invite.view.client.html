@@ -6,44 +6,68 @@
             </div>
             <h1 class="page-header" translate>
                 Send Invitation
+                <button class="btn btn-lg btn-orange send-btn pull-right" ng-click="model.msg=''" ng-show="model.msg">Send Another Invitation</button>
             </h1>
-            <div class="main-content">
-                <form class="form-horizontal" role="form" ng-submit="sendInvite()" name="form.theForm">
+            <div class="main-content" ng-hide="model.msg">
+
+                <form class="form-horizontal" role="form"
+                      ng-submit="model.sendInvite(model.form)" name="invitation" novalidate>
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="firstName" translate>First Name:</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="form.firstName" class="form-control" ng-model="firstName"
-                                   id="firstName" placeholder="{{'First Name'|translate}}">
+                        <label class="control-label col-sm-3" for="firstName" translate>First Name *:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="firstname" class="form-control" ng-model="model.form.firstname"
+                                   id="firstName" placeholder="{{'First Name'|translate}}" required>
+                            <span ng-show="invitation.firstname.$dirty" class="error">
+                                <span ng-show="invitation.firstname.$error.required">First Name is required.</span>
+                             </span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="lastName" translate>Last Name:</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" ng-model="lastName" id="lastName"
-                                   placeholder="{{'Last Name'|translate}}">
+                        <label class="control-label col-sm-3" for="lastName" translate>Last Name *:</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="lastname" class="form-control" ng-model="model.form.lastname" id="lastName"
+                                   placeholder="{{'Last Name'|translate}}" required>
+                            <span ng-show="invitation.lastname.$dirty" class="error">
+                                <span ng-show="invitation.lastname.$error.required">Last Name is required.</span>
+                             </span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="email" translate>Email:</label>
-                        <div class="col-sm-10">
-                            <input type="email" class="form-control" ng-model="emailAddress" id="email"
-                                   placeholder="{{'email@example.com'|translate}}">
+                        <label class="control-label col-sm-3" for="email" translate>Email *:</label>
+                        <div class="col-sm-9">
+                            <input type="email" name="email" class="form-control" ng-model="model.form.email" id="email"
+                                   placeholder="{{'email@example.com'|translate}}" ng-pattern="main.EMAIL_REGEXP" required>
+                            <span ng-show="invitation.email.$dirty" class="error">
+                                <span ng-show="invitation.email.$error.required">Email is required.</span>
+                                <span ng-show="invitation.email.$error.pattern">Invalid email address.</span>
+                             </span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="language" translate>Select Email Language:</label>
-                        <div class="col-sm-10">
-                            <select class="form-control" ng-model="emailLanguage" id="language">
-                                <option selected translate>English</option>
-                                <option translate>Hungarian</option>
+                        <label class="control-label col-sm-3" for="language" translate>Select Email Language:</label>
+                        <div class="col-sm-9">
+                            <select class="form-control" name="email_lang" ng-model="model.form.email_lang"
+                                    ng-init="model.form.email_lang='english'" id="language">
+                                <option value="english"  translate>English</option>
+                                <option value="hungarian" translate>Hungarian</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group" ng-show="showTextField">
-                        <label class="control-label col-sm-2" for="message" translate>Add Personalized Message:</label>
-                        <div class="col-sm-10">
-                            <textarea class="form-control" rows="3" ng-model="customMessage" id="message"
+                        <label class="control-label col-sm-3" for="message" translate>Add Personalized Message:</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" name="custom_message" rows="3" ng-model="model.form.custom_message" id="message"
                                       placeholder="{{'Add personalized message here!'|translate}}"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-3" for="sender" translate>From Signature *:</label>
+                        <div class="col-sm-9">
+                            <input class="form-control" ng-model="model.form.signature" name="signature"
+                                   ng-init="model.form.signature = main.user.firstname" id="sender" required>
+                            <span ng-show="invitation.signature.$dirty" class="error">
+                                <span ng-show="invitation.signature.$error.required">Your signature is required.</span>
+                             </span>
                         </div>
                     </div>
                     <div style="text-decoration: underline; text-align: right;">
@@ -51,19 +75,24 @@
                     </div>
                     <br/>
                     <div class="form-group center">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <button type="submit" ng-disabled="isDisabled"
+                        <div class="col-sm-offset-9 col-sm-3">
+                            <button type="submit" ng-disabled="invitation.$invalid"  ng-hide="model.showSendingBtn"
                                     class="btn btn-lg btn-orange send-btn">
                                 <translate>Send Invitation</translate>
                             </button>
-                            <div>
-                                <button class="btn btn-lg btn-orange" ng-show="showSendingBtn" ng-disabled="true">
-                                    <div class="loader">Sending...</div>
-                                </button>
-                            </div>
+
+                            <button class="btn btn-lg btn-orange" ng-show="model.showSendingBtn" ng-disabled="true">
+                                <div class="loader">Sending...</div>
+                            </button>
+
                         </div>
                     </div>
                 </form>
+
+            </div>
+            <div ng-show="model.msg">
+
+                <div ng-bind-html="main.renderHtml(model.msg)"></div>
             </div>
         </div>
     </div>

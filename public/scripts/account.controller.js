@@ -25,6 +25,12 @@
         function init() {
             //check token strt
             var tokenSet = Auth.parseJwt(Auth.getToken());
+            if(Auth.validateRememberMeCookie()) {
+                vm.isRemembered = true;
+            } else {
+                vm.isRemembered = false;
+            }
+
             if (tokenSet.fixpro) {
                 vm.askForProfileMsg = true;
 
@@ -151,13 +157,13 @@
                     delete data['username'];
                     delete data['password'];
                     delete data['confirmPassword'];
-                    delete data['remember'];
+
                 }
                 if (vm.userninfo.recno != 'new' && !vm.updatePwd) {
-                    console.log("I am here........");
+
                     delete data['password'];
                     delete data['confirmPassword'];
-                    delete data['remember'];
+
                 }
 
                 User.updateProfile(data)
@@ -173,11 +179,13 @@
                             if (data.remember) {
                                 var token = Auth.getToken();
                                 Auth.saveRememberMeCookie(token);
+                            } else {
+                                Auth.deleteRememberMeCookie();
                             }
 
                             delete data['password'];
                             delete data['confirmPassword'];
-                            delete data['remember'];
+
                         } else {
                             //vm.errormsg = response.data.msg;
                             alert(response.data.msg);
