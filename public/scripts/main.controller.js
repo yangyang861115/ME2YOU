@@ -7,6 +7,7 @@
         var vm = this;
         vm.user = {};
         vm.EMAIL_REGEXP = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+        vm.PHOTO_PLACEHOLDER_URL = "https://crucore.com/photos/default.jpg";
 
         function init(){
             if(Auth.isAuthed()) {
@@ -17,6 +18,9 @@
                         vm.userInfo = response.data.userninfo;
                         vm.user.fullname = vm.userRecord[1].value + " " + vm.userRecord[2].value;
                         vm.user.firstname = vm.userRecord[1].value;
+                        vm.user.photo = response.data.userninfo.photo;
+                        if(!vm.user.photo) vm.user.photo = vm.PHOTO_PLACEHOLDER_URL;
+
                     });
             }
         }
@@ -28,6 +32,14 @@
                 init();
             }
         });
+
+        $scope.$on('photoupdate', function(event, args) {
+            if(args == "success") {
+                console.log("i am here........");
+                init();
+            }
+        });
+
 
         vm.isAuthed = function () {
             return Auth.isAuthed();

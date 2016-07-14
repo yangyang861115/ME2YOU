@@ -1,3 +1,28 @@
+<style>
+    .cropArea {
+        background: #E4E4E4;
+        overflow: hidden;
+        width: 500px;
+        height: 350px;
+    }
+
+    form .progress {
+        line-height: 15px;
+    }
+
+    .progress {
+        display: inline-block;
+        width: 100px;
+        border: 3px groove #CCC;
+    }
+
+    .progress div {
+        font-size: smaller;
+        background: orange;
+        width: 0;
+    }
+</style>
+
 <div class="container main-container">
     <h1 class="page-header" translate>
         Account Settings
@@ -6,7 +31,55 @@
 
         <div ng-hide="model.msg">
             <p ng-show="model.askForProfileMsg">Please update your profile in the following form.</p>
-            <form class="form-horizontal" id="userProfile" name="userFm" ng-submit="model.updateProfile(userFm, model.formData)"
+
+            <!--user photo-->
+            <div id="photo" ng-show="model.photoUrl">
+                <img ng-src="{{model.photoUrl}}" alt="" style="border-radius: 50%">
+                <button ng-if="model.photoUrl != model.PHOTO_PLACEHOLDER_URL"
+                        class="btn btn-warning" ng-click="model.showUpload = !model.showUpload; model.result='';model.errorMsg='';model.dmsg = ''"
+                        style="margin-top: 160px;">replace</button>
+                <button ng-if="model.photoUrl == model.PHOTO_PLACEHOLDER_URL"
+                        class="btn btn-warning" ng-click="model.showUpload = !model.showUpload; model.result='';model.errorMsg='';model.dmsg = ''"
+                        style="margin-top: 160px;">Upload Photo</button>
+                <button class="btn btn-danger" ng-click="model.removePhoto(model.photoUrl)" ng-if="model.photoUrl != model.PHOTO_PLACEHOLDER_URL"
+                        style="margin-top: 160px;">Remove</button>
+
+            </div>
+
+
+            <!--upload image-->
+            <form name="myForm" ng-show="model.showUpload">
+                <div>Crop Image and Upload</div>
+                <button ngf-select ng-model="picFile" accept="image/*" ng-click="result = ''">
+                    Select Picture
+                </button>
+                <div ngf-drop ng-model="picFile" ngf-pattern="image/*"
+                     class="cropArea">
+                    <img-crop image="picFile  | ngfDataUrl"
+                              result-image="croppedDataUrl" ng-init="croppedDataUrl=''">
+                    </img-crop>
+                </div>
+
+                <button ng-hide="model.result" ng-click="model.upload(croppedDataUrl, picFile.name)">Submit</button>
+                <div class="row" ng-hide="model.errorMsg">
+            <span class="progress" ng-show="model.progress >= 0">
+            <div style="width: {{model.progress}}%" ng-bind="model.progress + '%'"></div></span><br>
+                </div>
+
+            </form>
+            <div>
+                <span ng-show="model.result">Upload Successful</span>
+                <span class="err help-block" ng-show="model.errorMsg">{{model.errorMsg}}</span>
+                <span ng-show="model.dmsg">{{model.dmsg}}</span>
+            </div>
+
+
+            <!--end of upload image-->
+
+
+
+            <form class="form-horizontal" id="userProfile" name="userFm"
+                  ng-submit="model.updateProfile(userFm, model.formData)"
                   novalidate>
                 <div class="form-group" ng-repeat="(i, line) in model.data">
 
@@ -15,20 +88,31 @@
 
                     <!--display-->
                     <div class="col-sm-10" ng-if="line.type == 'display'">
-                        <p class="form-control-static" id={{line.rowNum}} ng-init="model.formData[line.name]=line.value">
+                        <p class="form-control-static" id={{line.rowNum}}
+                           ng-init="model.formData[line.name]=line.value">
                             {{line.value}}</p>
                     </div>
 
                     <!--phone-->
                     <div class="col-sm-10" ng-if="line.type == 'phone'">
-                        <input type="tel" name={{line.name}} class="form-control" id={{line.rowNum}} ng-required={{line.reqd}}
+                        <!--phone for USA-->
+                        <input type="tel" ng-if="model.formData.country == 'us' " name={{line.name}}
+                               class="form-control" id={{line.rowNum}} ng-required={{line.reqd}}
+                               ng-model="model.formData[line.name]" ng-init="model.formData[line.name]=line.value"
+                               placeholder="123-456-7890"
+                               maxlength="{{line.max}}" ng-pattern="model.USAPHONE_PATTERN">
+
+                        <input type="tel" ng-if="model.formData.country != 'us'" name={{line.name}} class="form-control"
+                               id={{line.rowNum}} ng-required={{line.reqd}}
                                ng-model="model.formData[line.name]" ng-init="model.formData[line.name]=line.value"
                                maxlength="{{line.max}}">
+
                         <p class="help-block">{{line.extra}}</p>
                         <p class="help-block" ng-show="line.max">maximum length is {{line.max}}</p>
-                <span ng-show="userFm[line.name].$dirty || userFm.$submitted " class="error">
-                    <span ng-show="userFm[line.name].$error.required">{{line.label}} is required.</span>
-                </span>
+                        <span ng-show="userFm[line.name].$dirty || userFm.$submitted " class="error">
+                            <span ng-show="userFm[line.name].$error.required">{{line.label}} is required.</span>
+                            <span ng-show="userFm[line.name].$error.pattern">The format for {{line.label}} is 123-456-7890</span>
+                        </span>
                     </div>
 
                     <!--text-->
@@ -47,7 +131,8 @@
                     <!--date-->
                     <div class="col-sm-10" ng-if="line.type == 'date'">
                         <div class="input-group">
-                            <input type="text" class="form-control" name={{line.name}} id={{line.rowNum}} uib-datepicker-popup
+                            <input type="text" class="form-control" name={{line.name}} id={{line.rowNum}}
+                                   uib-datepicker-popup
                                    ng-model="model.formData[line.name]"
                                    ng-init="model.formData[line.name]= (line.value ? model.convertToDate(line.value): undefined)"
                                    ui-validate="{outOfBounds : 'model.checkDateLimits($value,model.datereq[line.name].dateOptions.minDate, model.datereq[line.name].dateOptions.maxDate)' }"
@@ -149,9 +234,11 @@
 
                     <!--radio-->
                     <div class="col-sm-10" ng-if="line.type == 'radio'">
-                        <div class="radio" ng-repeat="(val, opt) in line.lst" ng-init="model.formData[line.name]=line.value">
+                        <div class="radio" ng-repeat="(val, opt) in line.lst"
+                             ng-init="model.formData[line.name]=line.value">
                             <label>
-                                <input name={{line.name}} ng-model="model.formData[line.name]" type="radio" value="{{val}}"
+                                <input name={{line.name}} ng-model="model.formData[line.name]" type="radio"
+                                       value="{{val}}"
                                        ng-required={{line.reqd}}> {{opt}}
                             </label>
                         </div>
@@ -253,7 +340,8 @@
                         <div class="form-group">
                             <label for="confirmPassword" class="col-sm-2 control-label">Confirm password *</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="password" id="confirmPassword" required name="confirmPassword"
+                                <input class="form-control" type="password" id="confirmPassword" required
+                                       name="confirmPassword"
                                        ng-model="model.formData.confirmPassword"
                                        ui-validate="'$value==model.formData.password'"
                                        ui-validate-watch="'model.formData.password'">
@@ -321,7 +409,8 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-2">
-                            <input type="checkbox" ng-model="model.formData.remember" ng-init="model.formData.remember = model.isRemembered"
+                            <input type="checkbox" ng-model="model.formData.remember"
+                                   ng-init="model.formData.remember = model.isRemembered"
                                    name="remember" id="remember" class="pull-right">
                         </div>
                         <div class="col-sm-10 control-label">
@@ -335,7 +424,8 @@
                                    ng-model="model.updatePwd">
                         </div>
                         <div class="col-sm-10 control-label">
-                            <label for="updatePwd" class="pull-left">Check the box if your want to update your Password</label>
+                            <label for="updatePwd" class="pull-left">Check the box if your want to update your
+                                Password</label>
                         </div>
                     </div>
                     <div ng-if="model.updatePwd">
@@ -361,7 +451,8 @@
                         <div class="form-group">
                             <label for="confirmPassword" class="col-sm-2 control-label">Confirm password *</label>
                             <div class="col-sm-10">
-                                <input class="form-control" type="password" id="confirmPassword" required name="confirmPassword"
+                                <input class="form-control" type="password" id="confirmPassword" required
+                                       name="confirmPassword"
                                        ng-model="model.formData.confirmPassword"
                                        ui-validate="'$value==model.formData.password'"
                                        ui-validate-watch="'model.formData.password'">

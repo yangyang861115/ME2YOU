@@ -22,7 +22,7 @@
                 </a></li>
                 <li uib-dropdown on-toggle="open=!open" data-ng-show="main.isAuthed()">
                     <a href id="simple-dropdown" uib-dropdown-toggle>
-                        <!--<img src="../images/sarah.png" alt="sarah" style="margin-right: 10px;">-->
+                        <img ng-src="{{main.user.photo}}" alt="{{main.user.fullname}}" style="margin-right: 10px;width: 40px;border-radius: 50%">
                         <translate>{{main.user.fullname}}</translate>
                         <span class="caret"></span>
                     </a>

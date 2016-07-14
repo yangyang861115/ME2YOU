@@ -12,7 +12,9 @@
             'ngRoute',
             'gettext',
             'angularSmoothscroll',
-            'ui.bootstrap'
+            'ui.bootstrap',
+            'ngFileUpload',
+            'ngImgCrop'
         ]);
 
 })();
