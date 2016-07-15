@@ -6,7 +6,7 @@
             </div>
             <h1 class="page-header" translate>
                 Send Invitation
-                <button class="btn btn-lg btn-orange send-btn pull-right" ng-click="model.msg=''" ng-show="model.msg">Send Another Invitation</button>
+
             </h1>
             <div class="main-content" ng-hide="model.msg">
 
@@ -93,6 +93,12 @@
             <div ng-show="model.msg">
 
                 <div ng-bind-html="main.renderHtml(model.msg)"></div>
+                <div class="row">
+                    <div class="col-lg-6 col-lg-offset-3 text-center">
+                        <button class="btn btn-lg btn-orange send-btn " ng-click="model.refreshPage()" ng-show="model.msg">Send Another Invitation</button>
+                        <a href="#/user/contacts_activity"><button class="btn btn-lg btn-info send-btn " ng-click="model.msg=''" ng-show="model.msg">View My Contacts</button></a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -6,7 +6,7 @@
         .module("myApp")
         .controller("ActivityController", activityController);
 
-    function activityController(Auth, Activity, $location, $scope) {
+    function activityController(Auth, Activity, $location, $scope, $route) {
         var vm = this;
         vm.userId = Auth.getUserId();
 
@@ -28,10 +28,12 @@
         vm.sendInvite = sendInvite;
         vm.reinvite = reinvite;
         vm.remove = remove;
+        vm.refreshPage = refreshPage;
 
         function sendInvite(form){
             vm.showSendingBtn = true;
             form.id = parseInt(vm.userId);
+            console.log(form);
             Activity.sendNewInvite(form)
                 .then(
                     function(response) {
@@ -48,17 +50,18 @@
 
         }
 
-        function reinvite(inID) {
+        function reinvite(idx, inID) {
             var data = {
                 id: parseInt(vm.userId),
                 inID:inID
             };
 
+
             Activity.reinvite(data)
                 .then(
                     function(response) {
-                        console.log(response.data);
-                        alert(response.data.msg);
+                        vm.activities[idx].lastact = response.data.lastact;
+                        vm.activities[idx].action = "<button class='btn btn-sm btn-success' disabled='disabled'>Success</button>";
                     },
                     function(error) {}
                 );
@@ -80,6 +83,11 @@
                     function(error) {}
                 );
 
+        }
+
+
+        function refreshPage(){
+            $route.reload();
         }
     }
 })();
